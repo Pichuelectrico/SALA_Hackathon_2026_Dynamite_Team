@@ -6,27 +6,38 @@ import numpy as np
 # 1 Cargar dataset
 # =========================
 
-df = pd.read_csv("../output/final/dataset_intensity.csv")
+import os
 
-df["TIMESTAMP"] = pd.to_datetime(df["TIMESTAMP"])
+# Default to 1h submission, but could be modified to load others
+submission_file = "../submission_1h.csv"
+if not os.path.exists(submission_file):
+    print(f"File {submission_file} not found. Ensure pipeline.py has finished running.")
+    exit(0)
+
+df = pd.read_csv(submission_file)
+df["timestamp"] = pd.to_datetime(df["timestamp"])
 
 print("Shape:", df.shape)
 
 # =========================
-# 2 Serie temporal de lluvia
+# 2 Serie temporal de predicciones vs observaciones
 # =========================
 
-station = "CER"
+station = "jun"
 
-df_station = df[df["station"] == station].copy()
+df_station = df[df["station_id"] == station].copy()
+df_station = df_station.sort_values(by="timestamp")
 
-sample = df_station.head(500)
+sample = df_station.tail(100) # last 100 predictions
 
 plt.figure(figsize=(12,5))
-plt.plot(sample["TIMESTAMP"], sample["Rain_mm_Tot"])
-plt.title(f"Lluvia en el tiempo - estación {station}")
+plt.plot(sample["timestamp"], sample["obs_class"], label="Observado (Métrica: Clase)", marker="o")
+plt.plot(sample["timestamp"], sample["pred_class"], label="Predicho (Métrica: Clase)", marker="x", linestyle="--")
+plt.title(f"Lluvia (Clases) en el tiempo - estación {station}")
 plt.xlabel("Tiempo")
-plt.ylabel("Rain_mm_Tot")
+plt.ylabel("Clase de Lluvia (0, 1, 2)")
+plt.yticks([0, 1, 2])
+plt.legend()
 plt.xticks(rotation=45)
 plt.tight_layout()
 
@@ -34,28 +45,27 @@ plt.savefig("rain_time_series.png")
 plt.close()
 
 # =========================
-# 3 Real vs Predicho
+# 3 Real vs Predicho (Matriz de Confusión Visual)
 # =========================
 
-# Solo se ejecuta si existen predicciones
-pred_cols = [c for c in df.columns if "pred" in c]
+plt.figure(figsize=(6,6))
+# Add some jitter to visualize overlapping points in classes
+jitter_obs = sample["obs_class"] + np.random.normal(0, 0.05, size=len(sample))
+jitter_pred = sample["pred_class"] + np.random.normal(0, 0.05, size=len(sample))
 
-if len(pred_cols) > 0:
+plt.scatter(jitter_obs, jitter_pred, s=15, alpha=0.5)
 
-    pred = pred_cols[0]
+plt.xlabel("Real (Clase)")
+plt.ylabel("Predicho (Clase)")
+plt.xticks([0, 1, 2])
+plt.yticks([0, 1, 2])
 
-    plt.figure(figsize=(6,6))
-    plt.scatter(df["target_rain_next_1h"], df[pred], s=5)
+plt.title("Real vs Predicho (Jittered)")
 
-    plt.xlabel("Real")
-    plt.ylabel("Predicho")
+plt.tight_layout()
 
-    plt.title("Real vs Predicho")
-
-    plt.tight_layout()
-
-    plt.savefig("real_vs_pred.png")
-    plt.close()
+plt.savefig("real_vs_pred.png")
+plt.close()
 
 # =========================
 # 4 Feature Importance
@@ -83,30 +93,28 @@ except:
     print("No hay archivo de feature importance todavía")
 
 # =========================
-# 5 Tabla de métricas
+# 5 Tabla de métricas (Simplificada)
 # =========================
 
-try:
+from sklearn.metrics import classification_report
 
-    metrics = pd.read_csv("model_metrics.csv")
+report = classification_report(df["obs_class"], df["pred_class"], output_dict=True, zero_division=0)
+metrics_df = pd.DataFrame(report).transpose().round(3)
 
-    fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(8, 3))
+ax.axis("tight")
+ax.axis("off")
 
-    ax.axis("tight")
-    ax.axis("off")
+table = ax.table(
+    cellText=metrics_df.values,
+    rowLabels=metrics_df.index,
+    colLabels=metrics_df.columns,
+    loc="center"
+)
 
-    table = ax.table(
-        cellText=metrics.values,
-        colLabels=metrics.columns,
-        loc="center"
-    )
+table.scale(1,2)
 
-    table.scale(1,2)
+plt.savefig("model_metrics.png")
+plt.close()
 
-    plt.savefig("model_metrics.png")
-    plt.close()
-
-except:
-    print("No hay métricas todavía")
-
-print("Visualizaciones generadas.")
+print("Visualizaciones actualizadas y generadas con datos de R2.")

@@ -1,5 +1,9 @@
+torch
+boto3
+netCDF4
+tqdm
+scikit-learn
 pandas
 numpy
 matplotlib
-scikit-learn
-joblib
+seaborn

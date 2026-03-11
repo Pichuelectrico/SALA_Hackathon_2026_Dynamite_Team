@@ -2,13 +2,17 @@
 /info
 /output/final/
 /output/models/
+/output/datasets/
 __pycache__/
 *.py[codz]
 *$py.class
+/hackathon-participants/
+/precipitation-nowcasting/
 
 .DS_Store
 # C extensions
 *.so
+*.env
 
 # Distribution / packaging
 .Python
