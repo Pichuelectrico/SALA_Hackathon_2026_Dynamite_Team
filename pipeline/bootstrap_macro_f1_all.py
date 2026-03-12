@@ -1,0 +1,54 @@
+import pandas as pd
+import numpy as np
+from pathlib import Path
+from sklearn.metrics import f1_score
+
+# Carpeta donde están las submissions
+BASE = Path(r"C:\Users\AGES\Documents\SALA\Hackaton_Sala\output\official")
+
+files = {
+    "1h": BASE / "submission_1h.csv",
+    "3h": BASE / "submission_3h.csv",
+    "6h": BASE / "submission_6h.csv",
+}
+
+B = 1000  # número de réplicas bootstrap
+rng = np.random.default_rng(42)
+
+rows = []
+
+for horizon, path in files.items():
+    df = pd.read_csv(path)
+
+    y_true = df["obs_class"].to_numpy()
+    y_pred = df["pred_class"].to_numpy()
+    n = len(y_true)
+
+    # Bootstrap
+    boot = []
+    for _ in range(B):
+        idx = rng.integers(0, n, size=n)  # sample con reemplazo
+        f1 = f1_score(y_true[idx], y_pred[idx], average="macro")
+        boot.append(f1)
+
+    boot = np.array(boot)
+    mean = boot.mean()
+    lo = np.percentile(boot, 2.5)
+    hi = np.percentile(boot, 97.5)
+
+    rows.append({
+        "horizon": horizon,
+        "macro_f1_mean": mean,
+        "ci_2_5": lo,
+        "ci_97_5": hi,
+        "B": B,
+        "n_test": n
+    })
+
+results = pd.DataFrame(rows).sort_values("horizon")
+out_path = BASE / "bootstrap_macro_f1_summary.csv"
+results.to_csv(out_path, index=False)
+
+print("\nBootstrap Macro-F1 (95% CI) por horizonte:")
+print(results)
+print("\nGuardado en:", out_path)
