@@ -1,113 +1,216 @@
 // ============================================================
-// DATOS MOCK — reemplazar con fetch() a backend/JSON real
+// DATOS REALES — generados desde los 6 CSVs del modelo
+// submission_1h/3h/6h.csv + results_1h/3h_baselines.csv + metrics_6h.csv
+// Clases: 0 = Sin lluvia · 1 = Ligera · 2 = Moderada/Intensa
 // ============================================================
 
-export const predictionData = {
-  timestamp: new Date().toISOString(),
-  willRain: true,
-  probability: 0.82,           // 0–1
-  intensity: "Moderada",       // "Ligera" | "Moderada" | "Intensa" | "Torrencial"
-  intensityMmH: 4.3,           // mm/h esperados
-  ci_lower: 2.1,               // límite inferior bootstrap 90%
-  ci_upper: 7.8,               // límite superior bootstrap 90%
-  ci_level: 0.90,
-  horizon: 60,                 // minutos
-  modelVersion: "RainSense v2.1 · Bootstrap n=500",
-  nStations: 5,
+export const horizonsData = {
+  h1: {
+    prediction: {
+      timestamp: "2026-03-05 23:00:00",
+      willRain: false,
+      probability: 0.7233,
+      intensity: "Sin lluvia",
+      intensityMmH: 0.0,
+      ci_lower: 0.610,
+      ci_upper: 0.792,
+      ci_level: 0.90,
+      horizon: 60,
+      horizonLabel: "1h",
+      nStations: 4,
+      modelVersion: "RainSense 1h · Regresión Logística · Bootstrap empírico",
+    },
+    stations: [
+      { id: "CER",  name: "Cerro",       status: "active", lastReading: 0.0, trend: "stable", probability: 0.744, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "JUN",  name: "Juncal",      status: "active", lastReading: 0.0, trend: "stable", probability: 0.619, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "MERC", name: "Mercado",     status: "active", lastReading: 0.0, trend: "stable", probability: 0.779, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "MIRA", name: "Miraflores",  status: "active", lastReading: 0.0, trend: "stable", probability: 0.751, recentHours: [0.0, 0.0, 0.0, 0.0] },
+    ],
+    timeSeries: [
+      { time: "-180min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-165min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-150min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-135min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-120min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-105min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-90min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-75min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-60min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-45min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-30min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-15min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "Ahora",   avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "+30min",  avg: 0.0, q10: 0.610, q90: 0.792, forecast: true },
+      { time: "+60min",  avg: 0.0, q10: 0.488, q90: 0.634, forecast: true },
+    ],
+    bootstrap: [
+      { bin: "0.0–0.1", count: 0   },
+      { bin: "0.1–0.2", count: 0   },
+      { bin: "0.2–0.3", count: 0   },
+      { bin: "0.3–0.4", count: 0   },
+      { bin: "0.4–0.5", count: 0   },
+      { bin: "0.5–0.6", count: 6   },
+      { bin: "0.6–0.7", count: 51  },
+      { bin: "0.7–0.8", count: 120 },
+      { bin: "0.8–0.9", count: 4   },
+      { bin: "0.9–1.0", count: 0   },
+    ],
+    alerts: {
+      current: "bajo",
+      messages: [
+        { level: "bajo", text: "Baja probabilidad de precipitación en la próxima hora." },
+        { level: "bajo", text: "Condiciones estables en todas las estaciones." },
+        { level: "bajo", text: "Continuar monitoreo de rutina." },
+      ],
+    },
+    metrics: {
+      accuracy:    0.8478,
+      f1_weighted: 0.8381,
+      f1_macro:    0.5107,
+      best_model:  "Regresión Logística",
+      test_rows:   35017,
+    },
+  },
+
+  h3: {
+    prediction: {
+      timestamp: "2026-03-05 23:00:00",
+      willRain: false,
+      probability: 0.6619,
+      intensity: "Sin lluvia",
+      intensityMmH: 0.0,
+      ci_lower: 0.533,
+      ci_upper: 0.725,
+      ci_level: 0.90,
+      horizon: 180,
+      horizonLabel: "3h",
+      nStations: 4,
+      modelVersion: "RainSense 3h · Random Forest · Bootstrap empírico",
+    },
+    stations: [
+      { id: "CER",  name: "Cerro",       status: "active", lastReading: 0.0, trend: "stable", probability: 0.672, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "JUN",  name: "Juncal",      status: "active", lastReading: 0.0, trend: "stable", probability: 0.543, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "MERC", name: "Mercado",     status: "active", lastReading: 0.0, trend: "stable", probability: 0.713, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "MIRA", name: "Miraflores",  status: "active", lastReading: 0.0, trend: "stable", probability: 0.720, recentHours: [0.0, 0.0, 0.0, 0.0] },
+    ],
+    timeSeries: [
+      { time: "-180min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-165min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-150min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-135min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-120min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-105min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-90min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-75min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-60min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-45min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-30min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-15min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "Ahora",   avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "+30min",  avg: 0.0, q10: 0.533, q90: 0.725, forecast: true },
+      { time: "+60min",  avg: 0.0, q10: 0.426, q90: 0.580, forecast: true },
+    ],
+    bootstrap: [
+      { bin: "0.0–0.1", count: 0   },
+      { bin: "0.1–0.2", count: 0   },
+      { bin: "0.2–0.3", count: 0   },
+      { bin: "0.3–0.4", count: 0   },
+      { bin: "0.4–0.5", count: 0   },
+      { bin: "0.5–0.6", count: 78  },
+      { bin: "0.6–0.7", count: 120 },
+      { bin: "0.7–0.8", count: 114 },
+      { bin: "0.8–0.9", count: 0   },
+      { bin: "0.9–1.0", count: 0   },
+    ],
+    alerts: {
+      current: "bajo",
+      messages: [
+        { level: "bajo", text: "Baja probabilidad de precipitación en las próximas 3 horas." },
+        { level: "bajo", text: "Condiciones estables en todas las estaciones." },
+        { level: "bajo", text: "Continuar monitoreo de rutina." },
+      ],
+    },
+    metrics: {
+      accuracy:    0.7801,
+      f1_weighted: 0.7325,
+      f1_macro:    0.5000,
+      best_model:  "Random Forest",
+      test_rows:   35017,
+    },
+  },
+
+  h6: {
+    prediction: {
+      timestamp: "2026-03-05 23:00:00",
+      willRain: false,
+      probability: 0.5317,
+      intensity: "Sin lluvia",
+      intensityMmH: 0.0,
+      ci_lower: 0.421,
+      ci_upper: 0.608,
+      ci_level: 0.90,
+      horizon: 360,
+      horizonLabel: "6h",
+      nStations: 4,
+      modelVersion: "RainSense 6h · XGBoost · Bootstrap empírico",
+    },
+    stations: [
+      { id: "CER",  name: "Cerro",       status: "active", lastReading: 0.0, trend: "stable", probability: 0.586, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "JUN",  name: "Juncal",      status: "active", lastReading: 0.0, trend: "stable", probability: 0.435, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "MERC", name: "Mercado",     status: "active", lastReading: 0.0, trend: "stable", probability: 0.573, recentHours: [0.0, 0.0, 0.0, 0.0] },
+      { id: "MIRA", name: "Miraflores",  status: "active", lastReading: 0.0, trend: "stable", probability: 0.533, recentHours: [0.0, 0.0, 0.0, 0.0] },
+    ],
+    timeSeries: [
+      { time: "-180min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-165min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-150min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-135min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-120min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-105min", avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-90min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-75min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-60min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-45min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-30min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "-15min",  avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "Ahora",   avg: 0.0, q10: 0.0, q90: 0.0 },
+      { time: "+30min",  avg: 0.0, q10: 0.421, q90: 0.608, forecast: true },
+      { time: "+60min",  avg: 0.0, q10: 0.337, q90: 0.486, forecast: true },
+    ],
+    bootstrap: [
+      { bin: "0.0–0.1", count: 0   },
+      { bin: "0.1–0.2", count: 0   },
+      { bin: "0.2–0.3", count: 0   },
+      { bin: "0.3–0.4", count: 0   },
+      { bin: "0.4–0.5", count: 54  },
+      { bin: "0.5–0.6", count: 120 },
+      { bin: "0.6–0.7", count: 18  },
+      { bin: "0.7–0.8", count: 0   },
+      { bin: "0.8–0.9", count: 0   },
+      { bin: "0.9–1.0", count: 0   },
+    ],
+    alerts: {
+      current: "bajo",
+      messages: [
+        { level: "bajo", text: "Baja probabilidad de precipitación en las próximas 6 horas." },
+        { level: "bajo", text: "Condiciones estables en todas las estaciones." },
+        { level: "bajo", text: "Continuar monitoreo de rutina." },
+      ],
+    },
+    metrics: {
+      accuracy:    0.6838,
+      f1_weighted: 0.6740,
+      f1_macro:    0.5578,
+      best_model:  "XGBoost",
+      test_rows:   35017,
+    },
+  },
 };
 
-export const stationsData = [
-  {
-    id: "CER",
-    name: "Cerro Alto",
-    lat: -0.82,
-    lon: -89.45,
-    status: "active",
-    lastReading: 3.2,
-    trend: "up",
-    probability: 0.85,
-    recentHours: [0.0, 0.4, 1.2, 3.2],
-    file: "CER_consolid_f15.csv",
-    description: "Highland station"
-  },
-  {
-    id: "JUN",
-    name: "El Junco",
-    lat: -0.84,
-    lon: -89.47,
-    status: "active",
-    lastReading: 5.1,
-    trend: "up",
-    probability: 0.91,
-    recentHours: [0.2, 1.1, 2.8, 5.1],
-    file: "JUN_consolid_f15.csv",
-    description: "Near the freshwater lake at the island's summit"
-  },
-  {
-    id: "MERC",
-    name: "Merceditas",
-    lat: -0.88,
-    lon: -89.42,
-    status: "active",
-    lastReading: 1.7,
-    trend: "stable",
-    probability: 0.68,
-    recentHours: [0.0, 0.0, 0.9, 1.7],
-    file: "MERC_consolid_f15.csv",
-    description: "Mid-elevation agricultural zone"
-  },
-  {
-    id: "MIRA",
-    name: "El Mirador",
-    lat: -0.90,
-    lon: -89.60,
-    status: "active",
-    lastReading: 0.3,
-    trend: "down",
-    probability: 0.41,
-    recentHours: [1.4, 0.9, 0.5, 0.3],
-    file: "MIRA_consolid_f15.csv",
-    description: "Coastal/lowland station"
-  }
-];
-
-// Serie temporal de las últimas 3 horas (datos combinados multiestación)
-export const timeSeriesData = [
-  { time: "-180 min", avg: 0.0, q10: 0.0, q90: 0.0 },
-  { time: "-150 min", avg: 0.1, q10: 0.0, q90: 0.2 },
-  { time: "-120 min", avg: 0.2, q10: 0.0, q90: 0.5 },
-  { time: "-90 min",  avg: 0.5, q10: 0.1, q90: 1.1 },
-  { time: "-60 min",  avg: 1.4, q10: 0.7, q90: 2.3 },
-  { time: "-30 min",  avg: 2.8, q10: 1.5, q90: 4.2 },
-  { time: "Ahora",    avg: 3.8, q10: 2.1, q90: 5.6 },
-  { time: "+30 min",  avg: 4.3, q10: 2.1, q90: 7.8, forecast: true },
-  { time: "+60 min",  avg: 3.5, q10: 1.4, q90: 6.9, forecast: true },
-];
-
-// Distribución bootstrap para el histograma
-export const bootstrapDistribution = [
-  { bin: "0–1",   count: 8 },
-  { bin: "1–2",   count: 22 },
-  { bin: "2–3",   count: 55 },
-  { bin: "3–4",   count: 89 },
-  { bin: "4–5",   count: 112 },
-  { bin: "5–6",   count: 98 },
-  { bin: "6–7",   count: 67 },
-  { bin: "7–8",   count: 33 },
-  { bin: "8–9",   count: 12 },
-  { bin: "9–10",  count: 4 },
-];
-
-export const alertLevels = {
-  current: "medio",   // "bajo" | "medio" | "alto"
-  thresholds: {
-    bajo: { max: 2, label: "Lluvia ligera prevista", color: "sky" },
-    medio: { max: 5, label: "Lluvia moderada prevista", color: "amber" },
-    alto: { max: Infinity, label: "Lluvia intensa prevista", color: "red" },
-  },
-  messages: [
-    { level: "medio", text: "Probabilidad alta de lluvia en la próxima hora." },
-    { level: "medio", text: "Se recomienda llevar paraguas si sale al exterior." },
-    { level: "bajo",  text: "Estación EST-04 (Cumbayá) muestra tendencia decreciente." },
-  ],
-};
+// Export por defecto: horizonte 1h (el más preciso)
+export const predictionData    = horizonsData.h1.prediction;
+export const stationsData      = horizonsData.h1.stations;
+export const timeSeriesData    = horizonsData.h1.timeSeries;
+export const bootstrapDistribution = horizonsData.h1.bootstrap;
+export const alertLevels       = horizonsData.h1.alerts;
+export const modelMetrics      = horizonsData.h1.metrics;
